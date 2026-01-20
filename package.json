@@ -15,14 +15,22 @@
     "files": [
         "dist",
         "types",
-        "assets"
+        "assets",
+        "build_scripts"
     ],
     "scripts": {
-        "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js --external:./assets/*",
+        "build": "esbuild src/index.ts --bundle --format=esm --outfile=dist/index.js",
         "typecheck": "tsc --noEmit"
     },
     "author": "BentoPDF",
-    "license": "AGPL-3.0",
+    "contributors": [
+        "Artifex Software, Inc."
+    ],
+    "license": "AGPL-3.0-only",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/alam00000/bentopdf-gs-wasm.git"
+    },
     "dependencies": {
         "@types/emscripten": "^1.39.10"
     },

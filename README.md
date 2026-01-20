@@ -1,6 +1,41 @@
 # @bentopdf/gs-wasm
 
-Ghostscript compiled to WebAssembly for BentoPDF.
+Ghostscript compiled to WebAssembly.
+
+## Notice
+
+This package is a modified version of Ghostscript, originally developed by Artifex Software, Inc.
+
+It has been adapted for WebAssembly (WASM).
+
+## Attribution
+
+Ghostscript is copyright © Artifex Software, Inc.
+This package is distributed under the GNU Affero General Public License v3.0.
+
+This project is not affiliated with or endorsed by Artifex Software, Inc.
+
+## Source Code Availability
+
+This program is licensed under the GNU Affero General Public License v3.0.
+If you interact with this program over a network, you are entitled to
+receive the complete corresponding source code.
+
+The source code for this package is available at:
+https://github.com/alam00000/bentopdf-gs-wasm
+
+This package includes the complete **Corresponding Source** (build scripts and configuration) in the `build_scripts/` directory.
+
+## Build Instructions
+
+To rebuild the WASM binary from source:
+1. Download the source code from the repository or this package.
+2. Navigate to the `build_scripts/` directory.
+3. Follow the instructions in `build_scripts/README.md`.
+
+## License
+
+This project is licensed under the [AGPL-3.0-only](LICENSE) license.
 
 ## Installation
 
@@ -11,30 +46,10 @@ npm install @bentopdf/gs-wasm
 ## Usage
 
 ```typescript
-import { loadGhostscript } from '@bentopdf/gs-wasm';
+import { loadGhostscriptWASM } from '@bentopdf/gs-wasm';
 
-const gs = await loadGhostscript();
-
-// Use Ghostscript for PDF processing
+const gs = await loadGhostscriptWASM({
+    // Optional: Configure CDN loading
+    baseUrl: 'https://cdn.jsdelivr.net/npm/@bentopdf/gs-wasm@0.1.0/assets/'
+});
 ```
-
-## Features
-
--  Fully client-side PDF processing
-- PDF/A conversion support
-- No server uploads required - all processing happens in the browser
-
-## Building
-
-```bash
-npm install
-npm run build
-```
-
-## License
-
-This project is licensed under the [AGPL-3.0](LICENSE) license.
-
-Ghostscript is © Artifex Software, Inc. and licensed under AGPL-3.0.
-
-BentoPDF is © BentoPDF and licensed under AGPL-3.0.
