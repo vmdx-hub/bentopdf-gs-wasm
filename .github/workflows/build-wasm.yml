@@ -17,7 +17,7 @@ jobs:
       - name: Download GhostPDL 10.05.1
         run: |
           wget -O ghostpdl.tar.xz \
-            https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs100501/ghostpdl-10.05.1.tar.xz
+            https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10051/ghostpdl-10.05.1.tar.xz
 
           tar -xf ghostpdl.tar.xz
           mv ghostpdl-10.05.1 ghostpdl
