@@ -28,7 +28,7 @@ EM_LD_FLAGS="${EM_LD_FLAGS:--sFILESYSTEM=1 -sEXPORTED_RUNTIME_METHODS=FS,callMai
 EM_LD_FLAGS="${EM_LD_FLAGS} -sBINARYEN_EXTRA_PASSES=${BINARYEN_EXTRA_PASSES}"
 
 if [ "${CLOSURE_MODE}" != "0" ]; then
-    } --closure ${CLOSURE_MODE}"
+    EM_LD_FLAGS="${EM_LD_FLAGS} --closure ${CLOSURE_MODE}"
 fi
 
 # Ghostscriptのドライバーを限定しない。
