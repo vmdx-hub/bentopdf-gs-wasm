@@ -13,7 +13,7 @@ echo "2. Cleaning previous build..."
 make distclean 2>/dev/null || true
 
 echo "3. Installing autoconf..."
-apt-get update && apt-get install --yes autoconf=2.71-2
+apt-get update && apt-get install --yes autoconf
 
 BINARYEN_EXTRA_PASSES_DEFAULT='--strip-debug,--strip-producers,--dce,--remove-unused-module-elements,--vacuum,--converge'
 BINARYEN_EXTRA_PASSES="${BINARYEN_EXTRA_PASSES:-${BINARYEN_EXTRA_PASSES_DEFAULT}}"
