@@ -8,6 +8,7 @@ pushd ghostpdl >/dev/null
 
 echo "1. Checking Emscripten tools..."
 emcc --version
+em++ --version
 
 echo "2. Cleaning previous build..."
 make distclean 2>/dev/null || true
@@ -23,7 +24,7 @@ CLOSURE_MODE="${CLOSURE_MODE:-${CLOSURE_MODE_DEFAULT}}"
 
 EM_OPT_FLAGS="${EM_OPT_FLAGS:--Os -g0 -flto -ffunction-sections -fdata-sections}"
 
-EM_LD_FLAGS="${EM_LD_FLAGS:--sFILESYSTEM=1 -sEXPORTED_RUNTIME_METHODS=FS,callMain -sMODULARIZE=1 -sEXPORT_ES6=1 -sINVOKE_RUN=0 -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8388608 -sDEFAULT_TO_CXX=1}"
+EM_LD_FLAGS="${EM_LD_FLAGS:--sFILESYSTEM=1 -sEXPORTED_RUNTIME_METHODS=FS,callMain -sMODULARIZE=1 -sEXPORT_ES6=1 -sINVOKE_RUN=0 -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8388608}"
 
 EM_LD_FLAGS="${EM_LD_FLAGS} -sBINARYEN_EXTRA_PASSES=${BINARYEN_EXTRA_PASSES}"
 
@@ -44,6 +45,9 @@ emconfigure ./configure \
     --host=$(emcc -dumpmachine) \
     --build=$(./config.guess) \
     ${GS_CONFIGURE_FLAGS} \
+    CC=emcc \
+    CXX=em++ \
+    LD=em++ \
     CFLAGS="${EM_OPT_FLAGS}" \
     CXXFLAGS="${EM_OPT_FLAGS}" \
     LDFLAGS="${EM_OPT_FLAGS} ${EM_LD_FLAGS}"
