@@ -17,19 +17,29 @@ apt-get update && apt-get install --yes autoconf
 
 BINARYEN_EXTRA_PASSES_DEFAULT='--strip-debug,--strip-producers,--dce,--remove-unused-module-elements,--vacuum,--converge'
 BINARYEN_EXTRA_PASSES="${BINARYEN_EXTRA_PASSES:-${BINARYEN_EXTRA_PASSES_DEFAULT}}"
+
 CLOSURE_MODE_DEFAULT="${CLOSURE_MODE_DEFAULT:-1}"
 CLOSURE_MODE="${CLOSURE_MODE:-${CLOSURE_MODE_DEFAULT}}"
+
 EM_OPT_FLAGS="${EM_OPT_FLAGS:--Os -g0 -flto -ffunction-sections -fdata-sections}"
+
 EM_LD_FLAGS="${EM_LD_FLAGS:--sFILESYSTEM=1 -sEXPORTED_RUNTIME_METHODS=FS,callMain -sMODULARIZE=1 -sEXPORT_ES6=1 -sINVOKE_RUN=0 -sALLOW_MEMORY_GROWTH=1}"
+
 EM_LD_FLAGS="${EM_LD_FLAGS} -sBINARYEN_EXTRA_PASSES=${BINARYEN_EXTRA_PASSES}"
+
 if [ "${CLOSURE_MODE}" != "0" ]; then
-  EM_LD_FLAGS="${EM_LD_FLAGS} --closure ${CLOSURE_MODE}"
+    EM_LD_FLAGS="${EM_LD_FLAGS} --closure ${CLOSURE_MODE}"
 fi
-GS_SELECTED_DRIVERS="${GS_SELECTED_DRIVERS:-BMP,JPEG,PNG,PS,TIFF}"
-GS_CONFIGURE_FLAGS="${GS_CONFIGURE_FLAGS:---disable-contrib --disable-cups --disable-dbus --disable-fontconfig --disable-gtk --without-libpaper --without-libidn --without-pdftoraster --without-ijs --without-x --with-drivers=${GS_SELECTED_DRIVERS}}"
+
+# Ghostscriptのドライバーを限定しない。
+# PDF内の透明画像・SMask等の処理に必要な機能を
+# ビルド時に落とさないため、--with-drivers は指定しない。
+GS_CONFIGURE_FLAGS="${GS_CONFIGURE_FLAGS:---disable-contrib --disable-cups --disable-dbus --disable-fontconfig --disable-gtk --without-libpaper --without-libidn --without-pdftoraster --without-ijs --without-x}"
 
 echo "4. Configuring for WebAssembly..."
+
 NOCONFIGURE=1 ./autogen.sh
+
 emconfigure ./configure \
     --host=$(emcc -dumpmachine) \
     --build=$(./config.guess) \
@@ -39,21 +49,31 @@ emconfigure ./configure \
     LDFLAGS="${EM_OPT_FLAGS} ${EM_LD_FLAGS}"
 
 echo "5. Building with Emscripten..."
+
 emmake make -j$(nproc)
 
 echo "6. Testing WebAssembly binary..."
+
 if [ -f "./bin/gs" ]; then
+
     echo "Build SUCCESS!"
     echo "Output files:"
+
     ls -la ./bin/gs*
+
 else
+
     echo "Build FAILED!"
     echo "Checking for alternative output locations..."
+
     find . -name "*.wasm" -o -name "*.js" | head -10
+
 fi
 
-echo "7. Copying files to gs directory..."
+echo "7. Copying files to dist directory..."
+
 mkdir -p ../dist
+
 cp ./bin/gs ../dist/gs.js
 cp ./bin/gs.wasm ../dist/gs.wasm
 
