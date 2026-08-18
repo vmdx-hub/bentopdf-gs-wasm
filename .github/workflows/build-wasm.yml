@@ -14,9 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Clone GhostPDL
+      - name: Download GhostPDL 10.05.1
         run: |
-          git clone --depth 1 https://github.com/ArtifexSoftware/ghostpdl.git ghostpdl
+          wget -O ghostpdl.tar.xz \
+            https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs100501/ghostpdl-10.05.1.tar.xz
+
+          tar -xf ghostpdl.tar.xz
+          mv ghostpdl-10.05.1 ghostpdl
 
       - name: Make build script executable
         run: chmod +x build_scripts/build.sh
