@@ -13,8 +13,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
+
+      - name: Clone GhostPDL
+        run: |
+          git clone --depth 1 https://github.com/ArtifexSoftware/ghostpdl.git ghostpdl
 
       - name: Make build script executable
         run: chmod +x build_scripts/build.sh
