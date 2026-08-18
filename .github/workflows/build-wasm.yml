@@ -1,0 +1,34 @@
+name: Build Ghostscript WASM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: emscripten/emsdk:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Make build script executable
+        run: chmod +x build_scripts/build.sh
+
+      - name: Build Ghostscript WASM
+        run: ./build_scripts/build.sh
+
+      - name: Show build output
+        run: |
+          echo "=== dist ==="
+          ls -lh dist/
+
+      - name: Upload build result
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghostscript-wasm-build
+          path: dist/
