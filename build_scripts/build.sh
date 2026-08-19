@@ -8,7 +8,6 @@ pushd ghostpdl >/dev/null
 
 echo "1. Checking Emscripten tools..."
 emcc --version
-em++ --version
 
 echo "2. Cleaning previous build..."
 make distclean 2>/dev/null || true
@@ -33,8 +32,6 @@ if [ "${CLOSURE_MODE}" != "0" ]; then
 fi
 
 # Ghostscriptのドライバーを限定しない。
-# PDF内の透明画像・SMask等の処理に必要な機能を
-# ビルド時に落とさないため、--with-drivers は指定しない。
 GS_CONFIGURE_FLAGS="${GS_CONFIGURE_FLAGS:---disable-contrib --disable-cups --disable-dbus --disable-fontconfig --disable-gtk --without-libpaper --without-libidn --without-pdftoraster --without-ijs --without-x}"
 
 echo "4. Configuring for WebAssembly..."
@@ -45,16 +42,13 @@ emconfigure ./configure \
     --host=$(emcc -dumpmachine) \
     --build=$(./config.guess) \
     ${GS_CONFIGURE_FLAGS} \
-    CC=emcc \
-    CXX=em++ \
-    CCLD=em++ \
     CFLAGS="${EM_OPT_FLAGS}" \
     CXXFLAGS="${EM_OPT_FLAGS}" \
     LDFLAGS="${EM_OPT_FLAGS} ${EM_LD_FLAGS}"
 
 echo "5. Building with Emscripten..."
 
-emmake make CCLD=em++ -j$(nproc)
+emmake make -j$(nproc)
 
 echo "6. Testing WebAssembly binary..."
 
