@@ -47,14 +47,14 @@ emconfigure ./configure \
     ${GS_CONFIGURE_FLAGS} \
     CC=emcc \
     CXX=em++ \
-    LD=em++ \
+    CCLD=em++ \
     CFLAGS="${EM_OPT_FLAGS}" \
     CXXFLAGS="${EM_OPT_FLAGS}" \
     LDFLAGS="${EM_OPT_FLAGS} ${EM_LD_FLAGS}"
 
 echo "5. Building with Emscripten..."
 
-emmake make -j$(nproc)
+emmake make CCLD=em++ -j$(nproc)
 
 echo "6. Testing WebAssembly binary..."
 
