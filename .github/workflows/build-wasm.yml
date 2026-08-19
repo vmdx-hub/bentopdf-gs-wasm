@@ -14,27 +14,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download GhostPDL 10.05.1
+      - name: Clone GhostPDL
         run: |
-          wget -O ghostpdl.tar.xz \
-            https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10051/ghostpdl-10.05.1.tar.xz
-
-          tar -xf ghostpdl.tar.xz
-          mv ghostpdl-10.05.1 ghostpdl
+          rm -rf ghostpdl
+          git clone --depth 1 https://github.com/ArtifexSoftware/ghostpdl.git ghostpdl
 
       - name: Make build script executable
-        run: chmod +x build_scripts/build.sh
+        run: |
+          chmod +x build_scripts/build.sh
 
       - name: Build Ghostscript WASM
-        run: ./build_scripts/build.sh
+        run: |
+          ./build_scripts/build.sh
 
       - name: Show build output
         run: |
           echo "=== dist ==="
-          ls -lh dist/
+          ls -lah dist
+
+          echo "=== Ghostscript JS ==="
+          ls -lh dist/gs.js
+
+          echo "=== Ghostscript WASM ==="
+          ls -lh dist/gs.wasm
 
       - name: Upload build result
         uses: actions/upload-artifact@v4
         with:
-          name: ghostscript-wasm-build
-          path: dist/
+          name: ghostscript-wasm
+          path: |
+            dist/gs.js
+            dist/gs.wasm
+          if-no-files-found: error
